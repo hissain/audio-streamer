@@ -8,6 +8,9 @@ android {
     namespace = "com.hissain.android.demo.hearingaid"
     compileSdk = 36
 
+    // enable view binging
+    buildFeatures.viewBinding = true
+
     defaultConfig {
         applicationId = "com.hissain.android.demo.hearingaid"
         minSdk = 30

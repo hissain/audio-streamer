@@ -1,5 +1,6 @@
 package com.hissain.android.demo.hearingaid
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.media.*
@@ -141,12 +142,13 @@ class SocketService : Service(), CoroutineScope {
     private var audioJob: Job? = null
     private var isStreaming = AtomicBoolean(false)
 
+    @SuppressLint("MissingPermission")
     fun startAudioStream(sampleRate: Int, audioSource: Int, onLog: (String)->Unit) {
         if (isStreaming.get()) {
             onLog("Already streaming")
             return
         }
-        audioJob = launch {
+        audioJob = launch @androidx.annotation.RequiresPermission(android.Manifest.permission.RECORD_AUDIO) {
             try {
                 val out = outStream ?: throw IOException("Not connected")
                 // send AUDIO_START and metadata
