@@ -29,9 +29,13 @@ class MainActivity : AppCompatActivity() {
             service = (binder as SocketService.LocalBinder).getService()
             bound = true
             log("Service connected")
+            binding.btnConnect.isEnabled = true // Enable once ready
         }
         override fun onServiceDisconnected(name: ComponentName?) {
-            bound = false; service = null; log("Service disconnected")
+            bound = false
+            service = null
+            log("Service disconnected")
+            binding.btnConnect.isEnabled = false
         }
     }
 
@@ -40,7 +44,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        // Disable connect until bound
+        binding.btnConnect.isEnabled = false
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED) {
             permissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
         }
 
@@ -52,7 +60,8 @@ class MainActivity : AppCompatActivity() {
             val sp = binding.etServer.text.toString().trim()
             val parts = sp.split(":")
             if (parts.size != 2) { toast("server must be host:port"); return@setOnClickListener }
-            val host = parts[0]; val port = parts[1].toInt()
+            val host = parts[0]
+            val port = parts[1].toInt()
             service?.connect(host, port, ::log) ?: toast("service not ready")
         }
         binding.btnDisconnect.setOnClickListener {
