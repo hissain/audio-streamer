@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         thread {
             try {
-                socket = Socket("YOUR_PC_IP", 9000) // Replace with PC's LAN IP
+                socket = Socket("192.168.0.103", 9000) // Replace with PC's LAN IP
                 writer = PrintWriter(socket.getOutputStream(), true)
                 reader = BufferedReader(InputStreamReader(socket.getInputStream()))
 
